@@ -63,8 +63,12 @@ function getRandom(option: string, cfg: SakuraConfig): unknown {
 				Math.random() * (cfg.speed.vertical.max - cfg.speed.vertical.min);
 			return (_x: number, y: number) => y + random;
 		}
-		case "fnr":
-			return (r: number) => r + cfg.speed.rotation;
+		case "fnr": {
+			const random =
+				cfg.speed.rotation.min +
+				Math.random() * (cfg.speed.rotation.max - cfg.speed.rotation.min);
+			return (r: number) => r + random;
+		}
 		case "fna":
 			return (alpha: number) => alpha - cfg.speed.fadeSpeed * 0.01;
 		default:
@@ -99,6 +103,9 @@ class Sakura {
 	trailFrame = 0;
 	twinklePhase = Math.random() * Math.PI * 2;
 	twinkleSpeed: number;
+	swayPhase = Math.random() * Math.PI * 2;
+	swaySpeed: number;
+	swayAmplitude: number;
 
 	constructor(
 		x: number,
@@ -125,6 +132,12 @@ class Sakura {
 		this.twinkleSpeed =
 			cfg.twinkle.speed.min +
 			Math.random() * (cfg.twinkle.speed.max - cfg.twinkle.speed.min);
+		this.swaySpeed =
+			cfg.sway.speed.min +
+			Math.random() * (cfg.sway.speed.max - cfg.sway.speed.min);
+		this.swayAmplitude =
+			cfg.sway.amplitude.min +
+			Math.random() * (cfg.sway.amplitude.max - cfg.sway.amplitude.min);
 	}
 
 	draw(cxt: OffscreenCanvasRenderingContext2D) {
@@ -163,39 +176,40 @@ class Sakura {
 		scale: number,
 		alpha: number,
 	) {
-		const sourceSize = Math.min(this.img.width, this.img.height);
-		if (sourceSize <= 0 || alpha <= 0) return;
-		const sourceX = (this.img.width - sourceSize) / 2;
-		const sourceY = (this.img.height - sourceSize) / 2;
-		const renderSize = 40 * this.s * scale;
+		if (this.img.width <= 0 || this.img.height <= 0 || alpha <= 0) return;
+		const renderWidth = 64 * this.s * scale;
+		const renderHeight = renderWidth * (this.img.height / this.img.width);
 
 		cxt.save();
 		cxt.globalAlpha = alpha;
+		cxt.translate(x, y);
+		cxt.rotate(this.r);
 		cxt.drawImage(
 			this.img,
-			sourceX,
-			sourceY,
-			sourceSize,
-			sourceSize,
-			x - renderSize / 2,
-			y - renderSize / 2,
-			renderSize,
-			renderSize,
+			-renderWidth / 2,
+			-renderHeight / 2,
+			renderWidth,
+			renderHeight,
 		);
 		cxt.restore();
 	}
 
 	update() {
 		this.captureTrail();
-		this.x = this.fn.x(this.x, this.y);
+		this.swayPhase += this.swaySpeed;
+		const swayOffset = this.config.sway.enable
+			? Math.sin(this.swayPhase) * this.swayAmplitude
+			: 0;
+		this.x = this.fn.x(this.x, this.y) + swayOffset;
 		// 修复原实现笔误:第二参数应为 this.x(原 fuwari 写法)
 		this.y = this.fn.y(this.x, this.y);
+		this.r = this.fn.r(this.r);
 		this.a = this.fn.a(this.a);
 		this.twinklePhase += this.twinkleSpeed;
 		// 越界则重新调整位置
 		if (
-			this.x > windowWidth ||
-			this.x < 0 ||
+			this.x > windowWidth + 80 ||
+			this.x < -80 ||
 			this.y > windowHeight ||
 			this.y < 0 ||
 			this.a <= 0
@@ -224,19 +238,12 @@ class Sakura {
 		this.trail.length = 0;
 		this.trailFrame = 0;
 		this.twinklePhase = Math.random() * Math.PI * 2;
-		if (Math.random() > 0.4) {
-			this.x = getRandom("x", this.config);
-			this.y = 0;
-			this.s = getRandom("s", this.config);
-			this.r = getRandom("r", this.config);
-			this.a = getRandom("a", this.config);
-		} else {
-			this.x = windowWidth;
-			this.y = getRandom("y", this.config);
-			this.s = getRandom("s", this.config);
-			this.r = getRandom("r", this.config);
-			this.a = getRandom("a", this.config);
-		}
+		this.swayPhase = Math.random() * Math.PI * 2;
+		this.s = getRandom("s", this.config);
+		this.x = getRandom("x", this.config);
+		this.y = -64 * this.s;
+		this.r = getRandom("r", this.config);
+		this.a = getRandom("a", this.config);
 	}
 }
 

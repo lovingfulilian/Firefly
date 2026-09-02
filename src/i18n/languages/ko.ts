@@ -363,7 +363,7 @@ export const ko: Translation = {
 	[Key.wallpaperCarousel]: "배경화면 캐러셀",
 	[Key.wavesAnimation]: "파도 애니메이션",
 	[Key.gradientTransition]: "그라디언트 전환",
-	[Key.sakuraEffect]: "미광 효과",
+	[Key.sakuraEffect]: "푸른달초 꽃잎",
 	[Key.effectsSettings]: "효과 설정",
 	[Key.overlaySettings]: "투명도 설정",
 	[Key.overlayOpacity]: "배경화면 불투명도",

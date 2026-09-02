@@ -65,7 +65,13 @@
 				return (_x: number, y: number) => y + random;
 			}
 			case "fnr":
-				return (r: number) => r + cfg.speed.rotation;
+			{
+				const random =
+					cfg.speed.rotation.min +
+					Math.random() *
+						(cfg.speed.rotation.max - cfg.speed.rotation.min);
+				return (r: number) => r + random;
+			}
 			case "fna":
 				return (alpha: number) => alpha - cfg.speed.fadeSpeed * 0.01;
 			default:
@@ -97,6 +103,9 @@
 		trailFrame = 0;
 		twinklePhase = Math.random() * Math.PI * 2;
 		twinkleSpeed: number;
+		swayPhase = Math.random() * Math.PI * 2;
+		swaySpeed: number;
+		swayAmplitude: number;
 
 		constructor(
 			x: number,
@@ -124,6 +133,13 @@
 				config.twinkle.speed.min +
 				Math.random() *
 					(config.twinkle.speed.max - config.twinkle.speed.min);
+			this.swaySpeed =
+				config.sway.speed.min +
+				Math.random() * (config.sway.speed.max - config.sway.speed.min);
+			this.swayAmplitude =
+				config.sway.amplitude.min +
+				Math.random() *
+					(config.sway.amplitude.max - config.sway.amplitude.min);
 		}
 
 		draw(cxt: CanvasRenderingContext2D) {
@@ -162,37 +178,40 @@
 			scale: number,
 			alpha: number,
 		) {
-			const sourceSize = Math.min(this.img.naturalWidth, this.img.naturalHeight);
-			if (sourceSize <= 0 || alpha <= 0) return;
-			const sourceX = (this.img.naturalWidth - sourceSize) / 2;
-			const sourceY = (this.img.naturalHeight - sourceSize) / 2;
-			const renderSize = 40 * this.s * scale;
+			if (this.img.naturalWidth <= 0 || this.img.naturalHeight <= 0 || alpha <= 0)
+				return;
+			const renderWidth = 64 * this.s * scale;
+			const renderHeight =
+				renderWidth * (this.img.naturalHeight / this.img.naturalWidth);
 
 			cxt.save();
 			cxt.globalAlpha = alpha;
+			cxt.translate(x, y);
+			cxt.rotate(this.r);
 			cxt.drawImage(
 				this.img,
-				sourceX,
-				sourceY,
-				sourceSize,
-				sourceSize,
-				x - renderSize / 2,
-				y - renderSize / 2,
-				renderSize,
-				renderSize,
+				-renderWidth / 2,
+				-renderHeight / 2,
+				renderWidth,
+				renderHeight,
 			);
 			cxt.restore();
 		}
 
 		update() {
 			this.captureTrail();
-			this.x = this.fn.x(this.x, this.y);
+			this.swayPhase += this.swaySpeed;
+			const swayOffset = this.config.sway.enable
+				? Math.sin(this.swayPhase) * this.swayAmplitude
+				: 0;
+			this.x = this.fn.x(this.x, this.y) + swayOffset;
 			this.y = this.fn.y(this.x, this.y);
+			this.r = this.fn.r(this.r);
 			this.a = this.fn.a(this.a);
 			this.twinklePhase += this.twinkleSpeed;
 			if (
-				this.x > windowWidth ||
-				this.x < 0 ||
+				this.x > windowWidth + 80 ||
+				this.x < -80 ||
 				this.y > windowHeight ||
 				this.y < 0 ||
 				this.a <= 0
@@ -221,19 +240,12 @@
 			this.trail.length = 0;
 			this.trailFrame = 0;
 			this.twinklePhase = Math.random() * Math.PI * 2;
-			if (Math.random() > 0.4) {
-				this.x = getRandomMainThread("x", this.config);
-				this.y = 0;
-				this.s = getRandomMainThread("s", this.config);
-				this.r = getRandomMainThread("r", this.config);
-				this.a = getRandomMainThread("a", this.config);
-			} else {
-				this.x = windowWidth;
-				this.y = getRandomMainThread("y", this.config);
-				this.s = getRandomMainThread("s", this.config);
-				this.r = getRandomMainThread("r", this.config);
-				this.a = getRandomMainThread("a", this.config);
-			}
+			this.swayPhase = Math.random() * Math.PI * 2;
+			this.s = getRandomMainThread("s", this.config);
+			this.x = getRandomMainThread("x", this.config);
+			this.y = -64 * this.s;
+			this.r = getRandomMainThread("r", this.config);
+			this.a = getRandomMainThread("a", this.config);
 		}
 	}
 

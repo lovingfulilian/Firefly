@@ -9,26 +9,26 @@ export const sakuraConfig: SakuraConfig = {
 	// 是否启用樱花特效
 	enable: true,
 
-	// 微光数量
-	sakuraNum: 200,
+	// 苍月草花瓣数量
+	sakuraNum: 26,
 
 	// 樱花越界限制次数，-1为无限循环
 	limitTimes: -1,
 
 	// 樱花尺寸
 	size: {
-		// 微光最小尺寸倍数
-		min: 0.5,
-		// 微光最大尺寸倍数
-		max: 1.1,
+		// 花瓣最小尺寸倍数
+		min: 0.55,
+		// 花瓣最大尺寸倍数
+		max: 1,
 	},
 
 	// 樱花不透明度
 	opacity: {
-		// 微光最小不透明度
-		min: 0.22,
-		// 微光最大不透明度
-		max: 0.6,
+		// 花瓣最小不透明度
+		min: 0.42,
+		// 花瓣最大不透明度
+		max: 0.72,
 	},
 
 	// 樱花移动速度
@@ -36,26 +36,42 @@ export const sakuraConfig: SakuraConfig = {
 		// 水平移动
 		horizontal: {
 			// 水平移动速度最小值
-			min: -0.2,
+			min: -0.18,
 			// 水平移动速度最大值
-			max: -0.01,
+			max: 0.18,
 		},
 		// 垂直移动
 		vertical: {
 			// 垂直移动速度最小值
-			min: -0.2,
+			min: 0.28,
 			// 垂直移动速度最大值
-			max: -0.01,
+			max: 0.62,
 		},
 		// 旋转速度
-		rotation: 0,
+		rotation: {
+			min: -0.008,
+			max: 0.008,
+		},
 		// 消失速度，不应大于最小不透明度
-		fadeSpeed: 0.008,
+		fadeSpeed: 0,
+	},
+
+	// 为每片花瓣分配独立相位，模拟不规则阵风
+	sway: {
+		enable: true,
+		amplitude: {
+			min: 0.18,
+			max: 0.48,
+		},
+		speed: {
+			min: 0.018,
+			max: 0.038,
+		},
 	},
 
 	// 按历史运动轨迹绘制短暂残影，方向会随粒子运动自然变化
 	trail: {
-		enable: true,
+		enable: false,
 		length: 5,
 		sampleEvery: 5,
 		opacity: 0.25,
@@ -64,7 +80,7 @@ export const sakuraConfig: SakuraConfig = {
 
 	// 每个微光使用不同速度轻微闪烁，避免整齐同步
 	twinkle: {
-		enable: true,
+		enable: false,
 		minBrightness: 0.2,
 		speed: {
 			min: 0.03,
