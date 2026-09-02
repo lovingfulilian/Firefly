@@ -9,26 +9,26 @@ export const sakuraConfig: SakuraConfig = {
 	// 是否启用樱花特效
 	enable: true,
 
-	// 樱花数量
-	sakuraNum: 21,
+	// 微光数量
+	sakuraNum: 200,
 
 	// 樱花越界限制次数，-1为无限循环
 	limitTimes: -1,
 
 	// 樱花尺寸
 	size: {
-		// 樱花最小尺寸倍数
+		// 微光最小尺寸倍数
 		min: 0.5,
-		// 樱花最大尺寸倍数
-		max: 0.8,
+		// 微光最大尺寸倍数
+		max: 1.1,
 	},
 
 	// 樱花不透明度
 	opacity: {
-		// 樱花最小不透明度
-		min: 0.3,
-		// 樱花最大不透明度
-		max: 0.9,
+		// 微光最小不透明度
+		min: 0.22,
+		// 微光最大不透明度
+		max: 0.6,
 	},
 
 	// 樱花移动速度
@@ -36,21 +36,40 @@ export const sakuraConfig: SakuraConfig = {
 		// 水平移动
 		horizontal: {
 			// 水平移动速度最小值
-			min: -1.7,
+			min: -0.2,
 			// 水平移动速度最大值
-			max: -1.2,
+			max: -0.01,
 		},
 		// 垂直移动
 		vertical: {
 			// 垂直移动速度最小值
-			min: 1.5,
+			min: -0.2,
 			// 垂直移动速度最大值
-			max: 2.2,
+			max: -0.01,
 		},
 		// 旋转速度
-		rotation: 0.03,
+		rotation: 0,
 		// 消失速度，不应大于最小不透明度
-		fadeSpeed: 0.03,
+		fadeSpeed: 0.008,
+	},
+
+	// 按历史运动轨迹绘制短暂残影，方向会随粒子运动自然变化
+	trail: {
+		enable: true,
+		length: 5,
+		sampleEvery: 5,
+		opacity: 0.25,
+		scaleStep: 0.08,
+	},
+
+	// 每个微光使用不同速度轻微闪烁，避免整齐同步
+	twinkle: {
+		enable: true,
+		minBrightness: 0.2,
+		speed: {
+			min: 0.03,
+			max: 0.07,
+		},
 	},
 
 	// 层级，确保樱花在合适的层级显示
