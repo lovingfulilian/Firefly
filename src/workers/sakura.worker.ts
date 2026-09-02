@@ -82,6 +82,8 @@ interface SakuraFns {
 	a: (a: number) => number;
 }
 
+type TrailPoint = { x: number; y: number };
+
 class Sakura {
 	x: number;
 	y: number;
@@ -93,6 +95,10 @@ class Sakura {
 	img: ImageBitmap;
 	limitArray: number[];
 	config: SakuraConfig;
+	trail: TrailPoint[] = [];
+	trailFrame = 0;
+	twinklePhase = Math.random() * Math.PI * 2;
+	twinkleSpeed: number;
 
 	constructor(
 		x: number,
@@ -116,23 +122,76 @@ class Sakura {
 		this.img = image;
 		this.limitArray = limitArray;
 		this.config = cfg;
+		this.twinkleSpeed =
+			cfg.twinkle.speed.min +
+			Math.random() * (cfg.twinkle.speed.max - cfg.twinkle.speed.min);
 	}
 
 	draw(cxt: OffscreenCanvasRenderingContext2D) {
+		const minBrightness = Math.max(
+			0,
+			Math.min(1, this.config.twinkle.minBrightness),
+		);
+		const pulse = this.config.twinkle.enable
+			? minBrightness +
+				((Math.sin(this.twinklePhase) + 1) / 2) * (1 - minBrightness)
+			: 1;
+		const alpha = Math.max(0, Math.min(1, this.a * pulse));
+
+		if (this.config.trail.enable && this.trail.length > 0) {
+			const opacity = Math.max(0, Math.min(1, this.config.trail.opacity));
+			const scaleStep = Math.max(0, this.config.trail.scaleStep);
+			for (let i = this.trail.length - 1; i >= 0; i--) {
+				const strength = (this.trail.length - i) / this.trail.length;
+				this.drawSprite(
+					cxt,
+					this.trail[i].x,
+					this.trail[i].y,
+					Math.max(0.25, 1 - scaleStep * (i + 1)),
+					alpha * opacity * strength,
+				);
+			}
+		}
+
+		this.drawSprite(cxt, this.x, this.y, 1, alpha);
+	}
+
+	private drawSprite(
+		cxt: OffscreenCanvasRenderingContext2D,
+		x: number,
+		y: number,
+		scale: number,
+		alpha: number,
+	) {
+		const sourceSize = Math.min(this.img.width, this.img.height);
+		if (sourceSize <= 0 || alpha <= 0) return;
+		const sourceX = (this.img.width - sourceSize) / 2;
+		const sourceY = (this.img.height - sourceSize) / 2;
+		const renderSize = 40 * this.s * scale;
+
 		cxt.save();
-		cxt.translate(this.x, this.y);
-		cxt.rotate(this.r);
-		cxt.globalAlpha = this.a;
-		cxt.drawImage(this.img, 0, 0, 40 * this.s, 40 * this.s);
+		cxt.globalAlpha = alpha;
+		cxt.drawImage(
+			this.img,
+			sourceX,
+			sourceY,
+			sourceSize,
+			sourceSize,
+			x - renderSize / 2,
+			y - renderSize / 2,
+			renderSize,
+			renderSize,
+		);
 		cxt.restore();
 	}
 
 	update() {
+		this.captureTrail();
 		this.x = this.fn.x(this.x, this.y);
 		// 修复原实现笔误:第二参数应为 this.x(原 fuwari 写法)
 		this.y = this.fn.y(this.x, this.y);
-		this.r = this.fn.r(this.r);
 		this.a = this.fn.a(this.a);
+		this.twinklePhase += this.twinkleSpeed;
 		// 越界则重新调整位置
 		if (
 			this.x > windowWidth ||
@@ -150,7 +209,21 @@ class Sakura {
 		}
 	}
 
+	private captureTrail() {
+		if (!this.config.trail.enable) return;
+		const sampleEvery = Math.max(1, Math.floor(this.config.trail.sampleEvery));
+		const trailLength = Math.max(0, Math.floor(this.config.trail.length));
+		this.trailFrame = (this.trailFrame + 1) % sampleEvery;
+		if (this.trailFrame !== 0 || trailLength === 0) return;
+
+		this.trail.unshift({ x: this.x, y: this.y });
+		if (this.trail.length > trailLength) this.trail.length = trailLength;
+	}
+
 	resetPosition() {
+		this.trail.length = 0;
+		this.trailFrame = 0;
+		this.twinklePhase = Math.random() * Math.PI * 2;
 		if (Math.random() > 0.4) {
 			this.x = getRandom("x", this.config);
 			this.y = 0;

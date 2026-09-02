@@ -22,6 +22,21 @@ export type SakuraConfig = {
 		rotation: number; // 旋转速度
 		fadeSpeed: number; // 消失速度，不应大于最小不透明度
 	};
+	trail: {
+		enable: boolean; // 是否绘制与运动方向一致的残影拖尾
+		length: number; // 拖尾残影数量
+		sampleEvery: number; // 每隔多少帧记录一次位置
+		opacity: number; // 拖尾相对于主体的透明度
+		scaleStep: number; // 每层残影缩小的比例
+	};
+	twinkle: {
+		enable: boolean; // 是否启用柔和明暗闪烁
+		minBrightness: number; // 闪烁最低亮度比例
+		speed: {
+			min: number;
+			max: number;
+		};
+	};
 	zIndex: number; // 层级，确保樱花在合适的层级显示
 };
 
