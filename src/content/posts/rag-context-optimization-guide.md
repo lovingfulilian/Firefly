@@ -2,6 +2,7 @@
 title: RAG 上下文优化全景指南：在 Token、TTFT 与准确率之间做工程取舍
 published: 2026-09-02
 description: 面向 Python、FastAPI 与 Node.js 研发工程师，系统讲解动态窗口、摘要压缩、结构化 Prompt、LLMLingua、知识提取、ReAct 自省与 Prompt Caching，并给出 ToC、ToB 场景的架构选型和生产落地方案。
+image: "./images/rag-context-optimization-yanami.png"
 tags: [RAG, Context Optimization, Prompt Compression, LLMLingua, Prompt Caching, ReAct, 工程实践]
 category: 人工智能
 draft: false
