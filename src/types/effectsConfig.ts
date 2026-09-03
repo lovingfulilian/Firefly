@@ -19,8 +19,22 @@ export type SakuraConfig = {
 			min: number; // 垂直移动速度最小值
 			max: number; // 垂直移动速度最大值
 		};
-		rotation: number; // 旋转速度
+		rotation: {
+			min: number; // 最小旋转速度，可设为负数表示反向旋转
+			max: number; // 最大旋转速度
+		};
 		fadeSpeed: number; // 消失速度，不应大于最小不透明度
+	};
+	sway: {
+		enable: boolean; // 是否启用随风左右摆动
+		amplitude: {
+			min: number; // 每帧摆动位移的最小值
+			max: number; // 每帧摆动位移的最大值
+		};
+		speed: {
+			min: number; // 摆动相位最小增量
+			max: number; // 摆动相位最大增量
+		};
 	};
 	trail: {
 		enable: boolean; // 是否绘制与运动方向一致的残影拖尾

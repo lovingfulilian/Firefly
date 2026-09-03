@@ -1,7 +1,5 @@
 {
   "src:assets/images/avatar.avif": "dcd8d5d1cecabea9a9",
-  "public:gallery/firefly-2026/cover.avif": "7588a28a8f989e8d88",
-  "public:gallery/firefly-2026/1.avif": "c8bca9dde6d2babfb5",
   "src:assets/images/DesktopWallpaper/d6.avif": "d9e5ec9ca7aebda9b0",
   "src:assets/images/DesktopWallpaper/d5.avif": "e2dbe0e1dae1d9c9cd",
   "src:assets/images/DesktopWallpaper/d4.avif": "727991b7a7bbe2b8c2",
@@ -42,5 +40,6 @@
   "src:content/posts/images/vector-index-roxy.png": "171f571b27752e3790",
   "src:content/posts/images/rag-retrieval-optimization-yanami.png": "345d8c47628564738f",
   "src:assets/images/logo/frieren-flower.png": "b5c9c2b7ccc1bccbc0",
+  "src:content/posts/images/rag-context-optimization-yanami.png": "939aae7081a08894b1",
   "src:content/posts/images/rag-evaluation-metrics-yanami.png": "3147762b5594315fa5"
 }

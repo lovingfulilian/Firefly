@@ -366,7 +366,7 @@ export const ru: Translation = {
 	[Key.wallpaperCarousel]: "Карусель обоев",
 	[Key.wavesAnimation]: "Анимация волн",
 	[Key.gradientTransition]: "Градиентный переход",
-	[Key.sakuraEffect]: "Эффект свечения",
+	[Key.sakuraEffect]: "Лепестки синелунника",
 	[Key.effectsSettings]: "Настройки эффектов",
 	[Key.overlaySettings]: "Настройки прозрачности",
 	[Key.overlayOpacity]: "Прозрачность обоев",
