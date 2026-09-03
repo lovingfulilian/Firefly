@@ -2,6 +2,7 @@
 title: RAG 系统评估指标全景指南：从检索、生成到线上业务闭环
 published: 2026-09-03
 description: 系统梳理 RAG 的检索、上下文、生成、端到端、工程与业务指标，讲清 MRR、NDCG、Context Precision、Faithfulness、TTFT 等指标的计算、数据要求及 RAGAS、TruLens 落地方法。
+image: "./images/rag-evaluation-metrics-yanami.png"
 tags: [RAG, RAGAS, TruLens, LLM Evaluation, 信息检索, 可观测性, 工程实践]
 category: 人工智能
 draft: false
