@@ -12,7 +12,7 @@ export const profileConfig: ProfileConfig = {
 	name: "晴时",
 
 	// 个人签名
-	bio: "旅途在继续,光阴荏苒有谁还记得,终不似少年游",
+	bio: "一枚全栈(干)工程师/agent开发工程师,产品,开发,测试,部署,运维,啥都不能干,精通睡觉",
 
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
